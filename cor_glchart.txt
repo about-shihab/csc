@@ -1,0 +1,90 @@
+-- Create table
+create table ULTIMUS.COR_GLCHART
+(
+  gl_acc_sl                NVARCHAR2(11) not null,
+  gl_acc_no                NVARCHAR2(50),
+  gl_acc_nm                NVARCHAR2(100),
+  gl_prefix                NVARCHAR2(3),
+  totalling_acc_sl         NVARCHAR2(11),
+  gl_type                  NVARCHAR2(1),
+  gl_acc_type              NVARCHAR2(1),
+  gl_level                 NUMBER(2),
+  gl_currency_id           NVARCHAR2(3),
+  postable                 NUMBER(1),
+  off_bs_flag              NUMBER(1),
+  br_acces_flag            NUMBER(1),
+  ho_acces_flag            NUMBER(1),
+  zone_acces_flag          NUMBER(1),
+  contra_contin_acces_flag NUMBER(1),
+  switch_gl_flag           NUMBER(1),
+  switch_gl_acc_sl         NVARCHAR2(11),
+  gl_breakup_flag          NUMBER(1),
+  record_status            NUMBER(1),
+  statement_cycle          NVARCHAR2(1),
+  opening_dt               DATE,
+  ibt_flag                 NUMBER(1),
+  service_type_id          CHAR(1) default 'C' not null,
+  auth_status_id           NVARCHAR2(1),
+  create_by                NVARCHAR2(15),
+  create_dt                DATE,
+  make_by                  NVARCHAR2(15),
+  make_dt                  DATE default SYSDATE,
+  auth_1st_by              NVARCHAR2(15),
+  auth_1st_dt              DATE,
+  auth_2nd_by              NVARCHAR2(15),
+  auth_2nd_dt              DATE,
+  last_action              NVARCHAR2(3)
+)
+tablespace BU_SYSTEM_TBS
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 320K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table ULTIMUS.COR_GLCHART
+  add constraint PK_COR_GLCHART primary key (GL_ACC_SL, SERVICE_TYPE_ID)
+  using index 
+  tablespace BU_INDEX_TBS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 64K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+alter table ULTIMUS.COR_GLCHART
+  add constraint UK_COR_GLCHART unique (GL_ACC_NO, SERVICE_TYPE_ID)
+  using index 
+  tablespace BU_INDEX_TBS
+  pctfree 10
+  initrans 2
+  maxtrans 255
+  storage
+  (
+    initial 128K
+    next 1M
+    minextents 1
+    maxextents unlimited
+  );
+-- Create/Recreate check constraints 
+alter table ULTIMUS.COR_GLCHART
+  add constraint CHK_COR_GLCHART_01
+  check (GL_TYPE in ('L','A', 'I','E','C'));
+alter table ULTIMUS.COR_GLCHART
+  add constraint CHK_COR_GLCHART_02
+  check (GL_ACC_TYPE in ('C','D'));
+alter table ULTIMUS.COR_GLCHART
+  add constraint CHK_COR_GLCHART_03
+  check (STATEMENT_CYCLE in ('W','M','D','Q','H','Y'));
+-- Grant/Revoke object privileges 
+grant select on ULTIMUS.COR_GLCHART to SEBLMIS;
+grant select on ULTIMUS.COR_GLCHART to ULT_SELECT;
