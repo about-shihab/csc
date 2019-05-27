@@ -54,7 +54,7 @@
                var data_row = table.row($(this).closest('tr')).data();
 
 
-               // $("#myModal").modal('show');
+               // Modal show function
                $('#myModal').on('show.bs.modal', function () {
                    $('#acc_sl').val(data_row.GL_ACC_SL);
                    $('#acc_no').val(data_row.GL_ACC_NO);

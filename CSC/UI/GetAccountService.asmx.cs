@@ -74,9 +74,6 @@ namespace CSC.UI
 
             List<CorGlChart> data=new List<CorGlChart>();
 
-            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
-            Dictionary<string, object> row;
             foreach (DataRow dr in dt.Rows)
             {
                 CorGlChart crgl=new CorGlChart();
