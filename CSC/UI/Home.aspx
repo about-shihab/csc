@@ -561,7 +561,6 @@
             <!-- /.modal-content -->
         </div>
 </div>
-     </div>
         <!-- /.modal-dialog -->
 
     <style>

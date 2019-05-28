@@ -102,7 +102,7 @@ namespace CSC.UI
             }
 
             // Sorting.
-           // data = _Default.SortByColumnWithOrder(order, orderDir, data);
+           // data = _Default.SortByColumnWithOrder(order, orderDir, data);    
 
             // Filter record count.
             int recFilter = data.Count;
@@ -119,6 +119,23 @@ namespace CSC.UI
             return result;
             //Context.Response.Write(serializer.Serialize(rows));
 
+        }
+
+        public DataTable GetDataTableFromCacheOrDatabase(string dateFrom, string dateTo)
+        {
+            GlAccountManager glAccountManager = new GlAccountManager();
+            DataTable dataTable = HttpContext.Current.Cache["secret key"] as DataTable;
+            string dateF = HttpContext.Current.Cache["dateFrom"] as string;
+            string dateT = HttpContext.Current.Cache["dateTo"] as string;
+            if (dateF!= dateFrom||dateT!=dateTo)
+            {
+
+                dataTable = glAccountManager.GetAccountsByDate(dateFrom, dateTo);
+                HttpContext.Current.Cache["secret key"] = dataTable;
+                HttpContext.Current.Cache["dateFrom"] = dateFrom;
+                HttpContext.Current.Cache["dateTo"] = dateTo;
+            }
+            return dataTable;
         }
 
         [WebMethod]
