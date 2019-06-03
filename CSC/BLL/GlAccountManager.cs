@@ -35,5 +35,10 @@ namespace CSC.BLL
             serviceId = serviceId.ToUpper() == "Islamic".ToUpper() ? "I" : "C";
             return glAccountGateway.GetSbsDetails(accNo, serviceId);
         }
+        public DataTable GetAllCategory()
+        {
+            return glAccountGateway.GetAllCategory();
+        }
+
     }
 }

@@ -40,12 +40,13 @@
 
 
        $(document).ready(function () {
-
+           GetCategoryDropDown();
            $("#searchButton").click(function () {
                LoadAccountDatatable();
                GetSectorDropDown();
                GetGroupDropDown();
                GetDepositDropDown();
+              
            });
 
            $('#accountTable tbody').on('click', 'tr', function () {
@@ -84,6 +85,7 @@
                    $("#sbsFlag").val('-1');
                    $("#sbsFlag").selectpicker("refresh");
                    GetsbsDetails();
+                   
                    //console.log($("#sect_code option[value='902470']").text());
                    //$("#dp_code").selectpicker("refresh");
                }).modal('show');
@@ -101,6 +103,7 @@
                obj.pay_acc = $('#pay_acc').val();
                obj.dp_code = $('#dp_code').val();
                obj.vt_tx = $('#vt_tx').val();
+               obj.csc_category_id = $('#csc_category').val();
                obj.sect_code = $('#sect_code').val();
                $.ajax({
                    url: 'GetAccountService.asmx/SaveGlDepoSetup',
@@ -235,7 +238,24 @@
                }
            });
        }
+       function GetCategoryDropDown() {
+           $.ajax({
+               type: "POST",
+               url: "GetAccountService.asmx/GetCategoryDropdown",
+               dataType: 'json',
+               data: "{}",
+               success: function (result) {
+                   var s = '<option title="Please Select Category" value="-1"> </option>';
+                   //console.log(result);
 
+                   for (var i = 0; i < result.length; i++) {
+                       s += '<option value="' + result[i].CSC_CATEGORY_ID + '">' + result[i].CSC_CATEGORY_NAME + '</option>';
+                       
+                   }
+                   $("#csc_category").html(s).selectpicker('refresh');
+               }
+           });
+       }
        function GetDepositDropDown() {
            $.ajax({
                type: "POST",
@@ -299,7 +319,9 @@
                       $("#sect_code").selectpicker('val', parseInt(sbs[0].SECTOR_ID_SBS));
                        $("#pd_group").selectpicker('val', sbs[0].SBS1_PRODUCT_GROUP_ID);
                        $("#sbsFlag").selectpicker('val', sbs[0].SBS_ENABLE_FLAG);
-                      
+                       if (sbs[0].CSC_CATEGORY_ID != null) {
+                           $("#csc_category").selectpicker('val', sbs[0].CSC_CATEGORY_ID);
+                       }
                    }
 
                    sbs = null;
@@ -320,6 +342,7 @@
            $("#sect_code").selectpicker('val', defaultValue);
            $("#pd_group").selectpicker('val', defaultValue);
            $("#sbsFlag").selectpicker('val', defaultValue);
+           $("#csc_category").selectpicker('val', defaultValue);
        }
    </script>
     <style>
@@ -406,7 +429,7 @@
                         <div class="card-header" style="background-color: #621e73; color:white">
                             
                                 <strong>Account Details</strong>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <%--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>--%>
                         </div>
                         
                         <div class="card-body">
@@ -460,11 +483,9 @@
                                 </div>
                             </div>
                     </div>
-                </div>
-
                     <div class="card text-center" id="accountDetailsDeposit" style="">
                         <div class="card-header" style="background-color: #621e73; color:white"><strong>SBS Deposit Setup</strong>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <%--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>--%>
                         </div>
                         
                         <div class="card-body">
@@ -549,13 +570,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        
+                                        
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                    
+                                    <div class="col-md-7">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Category</span>
+                                            </div>
+                                            <select class="selectpicker form-control show-tick" data-live-search="true" data-style="btn-info" id="csc_category"></select>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"><i class="far fa-window-close"></i> Close</button>
                     <button type="button" id="saveChangesButton" class="btn btn-primary"><i class="fas fa-save"></i> Save changes</button>
+                </div>
                 </div>
             </div>
             <!-- /.modal-content -->

@@ -87,6 +87,43 @@ namespace CSC.DAL
             }
 
         }
+        public DataTable GetAllCategory()
+        {
+            DataTable dtab = new DataTable();
+            OracleDataAdapter adp = new OracleDataAdapter();
+            using (OracleConnection connection = new OracleConnection())
+            {
+
+                connection.ConnectionString = connectionString;
+                try
+                {
+
+                    connection.Open();
+                    OracleCommand command = new OracleCommand();
+                    command.Connection = connection;
+                    command.CommandText = "fsp_get_csc_category";
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("perrorcode", OracleDbType.Int32, 5).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("perrormsg", OracleDbType.Varchar2, 2000).Direction = ParameterDirection.Output;
+                    command.Parameters.Add("presult_set_cur", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                    OracleDataReader dr = command.ExecuteReader();
+                    dtab.Load(dr);
+                    command.Parameters.Clear();
+                    return dtab;
+
+                }
+
+                catch (OracleException ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+        }
 
         public DataTable GetAllDepositCode()
         {
@@ -189,6 +226,7 @@ namespace CSC.DAL
                     command.Parameters.Add("psector_id_sbs", OracleDbType.Varchar2).Value = obj["sect_code"].ToString();
                     command.Parameters.Add("psbs1_product_group_id", OracleDbType.Int32).Value = Convert.ToInt32(obj["pd_group"]);
                     command.Parameters.Add("psbs_enable_flag", OracleDbType.Int32).Value = Convert.ToInt32(obj["sbsFlag"]);
+                    command.Parameters.Add("pcsc_category_id", OracleDbType.Int32).Value = Convert.ToInt32(obj["csc_category_id"]);
 
                     command.Parameters.Add("perrorcode", OracleDbType.Int32, 5).Direction = ParameterDirection.Output;
                     command.Parameters.Add("perrormsg", OracleDbType.Varchar2, 2000).Direction = ParameterDirection.Output;
@@ -219,6 +257,7 @@ namespace CSC.DAL
                                  ,t.sector_id_sbs
                                  ,t.sbs_enable_flag
                                  ,t.sbs1_product_group_id 
+                                 ,t.csc_category_id
                             FROM SEBL_SBS_GL_DEPO_SETUP t
                            WHERE t.gl_acc_no='" +accNo+"'AND t.service_type_id='"+serviceId+"'";
             using (OracleConnection connection = new OracleConnection())
