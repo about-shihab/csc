@@ -16,8 +16,8 @@
 
 
     <%--data table--%>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.css" />
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=ResolveUrl("~/Content/datatables.min.css")%>" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/Scripts/datatables.min.js")%>"></script>
     <%--data table end--%>
 
    <script type="text/javascript">
@@ -212,7 +212,7 @@
                    {
                        'data': null,
                        'render': function (data) {
-                           return '<button type="button" style="font-size:12px" class="btn btn-primary btn-sm"><i class="fas fa-info-circle"></i> Details</button>'
+                           return '<button type="button" style="font-size:10px; width:110%" class="btn btn-primary btn-sm"><i class="fas fa-info-circle"></i> Details</button>'
                            //return ' <input id = "detailsButton" type="button" Class="btn btn-primary" value="Details"/>'
 
                        }
